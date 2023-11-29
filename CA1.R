@@ -1,7 +1,10 @@
+install.packages("caret")
+
 library(ggplot2)  
 library(dplyr)    
 library(tidyr)   
-library(ggplot2) 
+library(ggplot2)
+library(caret)
 
 # a)
 
@@ -43,6 +46,73 @@ plot(as.Date(covid_data$Date), covid_data$Confirmed, type = "l", col = "blue",
 
 # b) 
 
+#Selecting numerical variables
+numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
+
+# Find the mean
+for (variable in numerical_variables) {
+  result.mean <- mean(covid_data[[variable]], na.rm = TRUE)
+  print(paste("Mean of", variable, ":", result.mean))
+}
+
+# Find the median 
+for (variable in numerical_variables) {
+  result.median <- median(covid_data[[variable]], na.rm = TRUE)
+  print(paste("Median of", variable, ":", result.median))
+}
+
+# Find the minimum 
+for (variable in numerical_variables) {
+  result.min <- min(covid_data[[variable]], na.rm = TRUE)
+  print(paste("Minimum of", variable, ":", result.min))
+}
+
+# Find the maximum
+for (variable in numerical_variables) {
+  result.max <- max(covid_data[[variable]], na.rm = TRUE)
+  print(paste("Maximum of", variable, ":", result.max))
+}
+
+# Find the standard deviation 
+for (variable in numerical_variables) {
+  result.sd <- sd(covid_data[[variable]], na.rm = TRUE)
+  print(paste("Standard Deviation of", variable, ":", result.sd))
+}
+
+#c)
+
+# min-max normalization 
+min_max_normalized <- predict(preProcess(covid_data[, numerical_variables], method = "range"), covid_data[, numerical_variables])
+print(min_max_normalized)
+
+# z-score standardization
+z_score_standardized <- scale(covid_data[, numerical_variables])
+print(z_score_standardized)
+
+# robust scalar
+robust_scaled <- predict(preProcess(covid_data[, numerical_variables], method = c("center", "scale")), covid_data[, numerical_variables])
+print(robust_scaled)
+
+#d) 
+
+covid_data$Date <- as.Date(covid_data$Date, format = "%Y-%m-%d")  # Adjust the format according to data format
+
+# Line plot visualization
+ggplot(covid_data, aes(x = Date, y = Deaths)) +
+  geom_line(color = "blue") +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
+  labs(x = "Date", y = "Deaths", title = "Trend of Deaths Over Time")
+
+
+
+# Scatter plot visualization
+ggplot(covid_data, aes(x = Recovered, y = Deaths)) +
+  geom_point(color = "blue") +
+  labs(x = "Recovered Cases", y = "Deaths", title = "Deaths vs Recovered Cases")
+
+######## improve the plot ############
+
+# Heatmap visualization
 
 
 
