@@ -19,7 +19,7 @@ library(caret)
 ### Continuous Variables:
   #### "Date"
 
-### Importing data frame and assiging it to a variable 
+### Importing data frame and assigning it to a variable 
 covid_data <- read.csv('full_grouped.csv', header = TRUE)
 
 #### Checking dataset for missing values
@@ -80,10 +80,12 @@ for (variable in numerical_variables) {
 }
 
 #c)
+numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
 
 # min-max normalization 
 min_max_normalized <- predict(preProcess(covid_data[, numerical_variables], method = "range"), covid_data[, numerical_variables])
 print(min_max_normalized)
+
 
 # z-score standardization
 z_score_standardized <- scale(covid_data[, numerical_variables])
@@ -95,6 +97,7 @@ print(robust_scaled)
 
 #d) 
 
+numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
 covid_data$Date <- as.Date(covid_data$Date, format = "%Y-%m-%d")  # Adjust the format according to data format
 
 # Line plot visualization
@@ -106,15 +109,53 @@ ggplot(covid_data, aes(x = Date, y = Deaths)) +
 
 
 # Scatter plot visualization
-ggplot(covid_data, aes(x = Recovered, y = Deaths)) +
+ggplot(covid_data, aes(x = New.cases, y = New.deaths)) +
   geom_point(color = "blue") +
   labs(x = "Recovered Cases", y = "Deaths", title = "Deaths vs Recovered Cases")
 
-######## improve the plot ############
 
 # Heatmap visualization
 
+install.packages( "gplots")
+library(caret)
+library(gplots)
 
+numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
+numerical_data <- covid_data[, numerical_variables] #subset the datafrafme with numerical values
 
+#Correlation matrix
+cor_Matrix <- cor(numerical_data)
+cor_Matrix
 
+#highly correlated attributed
+highlyCorrelated <- findCorrelation(cor(numerical_data), cutoff = 0.5)
+highlyCorrelated
+covid_subset2 = numerical_data[, c(highlyCorrelated)] # making a new subset for highly correlated data
 
+#Re-calculating correlation matrix
+cor_Matrix <- cor(covid_subset2)
+cor_Matrix
+
+#rounding it up to 2 decimal places
+rounder <- function(x){
+  sprintf("%.2f", x)
+}
+
+#plotting heat map
+heatmap.2(cor_Matrix,
+          symm = TRUE, 
+          trace = "none",
+          col = colorRampPalette(c("blue", "white", "red"))(50),
+          main = "Correlation Heatmap",
+          xlab = "Features",
+          ylab = "Features",
+          scale = "none",
+          margins = c(8, 8),
+          cellnote = matrix(rounder(cor_Matrix), ncol = ncol(cor_Matrix)),
+          notecol = "black",
+          notecex = 0.7,
+          symbreaks = FALSE,
+          density.info = "none",
+          key = TRUE,
+          cexCol = 0.9,
+          cexRow = 0.9)
