@@ -23,10 +23,23 @@ start_date <- as.Date("2020-04-22")
 end_date <- as.Date("2020-07-22")
 
 # Resizing the dataset for it has too many columns
-covid_data <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
-str(sample_data)
+raw_covid_data <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
 
+# Removing outliers
+# Calculate the IQR for the 'Confirmed' variable
+Q1 <- quantile(raw_covid_data$Confirmed, 0.25)
+Q3 <- quantile(raw_covid_data$Confirmed, 0.75)
+IQR_value <- Q3 - Q1
 
+# Define the upper and lower bounds for outliers with a smaller multiplier (e.g., 1.0)
+lower_bound <- Q1 - 1.5 * IQR_value
+upper_bound <- Q3 + 1.5 * IQR_value
+
+# Remove outlines from the dataset
+covid_data <- raw_covid_data[raw_covid_data$Confirmed >= lower_bound & raw_covid_data$Confirmed <= upper_bound, ]
+
+# Check the structure of the cleaned dataset
+str(covid_data)
 
 ############### TASKS ##################
 
