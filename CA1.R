@@ -24,7 +24,10 @@ start_date <- as.Date("2020-04-22")
 end_date <- as.Date("2020-07-22")
 
 # Resizing the dataset for it has too many columns
-covid_data <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
+covid_data_subset <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
+
+#Removing Outliers
+covid_data <- covid_data %>% filter(New.cases >= 0 & New.deaths >= 0)
 
 # Check the structure of the cleaned dataset
 str(covid_data)
