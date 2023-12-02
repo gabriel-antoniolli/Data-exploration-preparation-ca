@@ -45,9 +45,13 @@ for (variable in c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "N
   hist(covid_data[[variable]], col = "orange", main = paste(variable, "Distribution"), xlab = variable, ylab = "Frequency")
 }
 
+# avoiding scientific notation
+options(scipen = 999)
+
 # plot for continues data 
-plot(as.Date(covid_data$Date), covid_data$Confirmed, type = "l", col = "blue",
+plot(as.Date(covid_data$Date), format(covid_data$Confirmed, scientific = FALSE), type = "l", col = "blue",
      xlab = "Date", ylab = "Confirmed Cases", main = "COVID-19 Confirmed Cases Over Time - Continuos data")
+
 
 ###################################################
 # b) 
