@@ -83,17 +83,16 @@ for (variable in numerical_variables) {
 numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
 
 # min-max normalization 
-min_max_normalized <- predict(preProcess(covid_data[, numerical_variables], method = "range"), covid_data[, numerical_variables])
-print(min_max_normalized)
-
+min_max_normalized <- scale(covid_data[, numerical_variables], center = FALSE, scale = apply(covid_data[, numerical_variables], 2, max) - apply(covid_data[, numerical_variables], 2, min))
+min_max_normalized
 
 # z-score standardization
 z_score_standardized <- scale(covid_data[, numerical_variables])
-print(z_score_standardized)
+z_score_standardized
 
 # robust scalar
 robust_scaled <- predict(preProcess(covid_data[, numerical_variables], method = c("center", "scale")), covid_data[, numerical_variables])
-print(robust_scaled)
+robust_scaled
 
 #d) 
 
@@ -159,3 +158,16 @@ heatmap.2(cor_Matrix,
           key = TRUE,
           cexCol = 0.9,
           cexRow = 0.9)
+
+# e)
+# Task 'e' is answered in the report
+
+# f)
+# Applying dummy encoding to WHO Region categorical variable
+# Benefits will be discussed in the report, here we are just showing the implementation.
+install.packages('fastDummies')
+library('fastDummies')
+
+covid_data_encoded <- dummy_cols(covid_data, select_columns = 'WHO.Region', remove_first_dummy = TRUE)
+head(covid_data_encoded)
+head(covid_data)
