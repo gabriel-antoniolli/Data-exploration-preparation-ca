@@ -23,20 +23,7 @@ start_date <- as.Date("2020-04-22")
 end_date <- as.Date("2020-07-22")
 
 # Resizing the dataset for it has too many columns
-raw_covid_data <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
-
-# Removing outliers
-# Calculate the IQR for the 'Confirmed' variable
-Q1 <- quantile(raw_covid_data$Confirmed, 0.25)
-Q3 <- quantile(raw_covid_data$Confirmed, 0.75)
-IQR_value <- Q3 - Q1
-
-# Define the upper and lower bounds for outliers with a smaller multiplier (e.g., 1.0)
-lower_bound <- Q1 - 1.5 * IQR_value
-upper_bound <- Q3 + 1.5 * IQR_value
-
-# Remove outlines from the dataset
-covid_data <- raw_covid_data[raw_covid_data$Confirmed >= lower_bound & raw_covid_data$Confirmed <= upper_bound, ]
+covid_data <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
 
 # Check the structure of the cleaned dataset
 str(covid_data)
@@ -50,7 +37,7 @@ str(covid_data)
 # plot for categorical data
 barplot(table(covid_data$WHO.Region),cex.names= 0.7, las=2, col = "lightgreen", main = "WHO Region Distribution - Categorical data plot")
 
-### plot for numerical data
+# plot for numerical data
 par(mfrow = c(3,3))  # Arrange plots in a 3x3 grid 
 
 # loop through each numerical variable
@@ -58,11 +45,11 @@ for (variable in c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "N
   hist(covid_data[[variable]], col = "orange", main = paste(variable, "Distribution"), xlab = variable, ylab = "Frequency")
 }
 
-#### plot for continues data 
+# plot for continues data 
 plot(as.Date(covid_data$Date), covid_data$Confirmed, type = "l", col = "blue",
      xlab = "Date", ylab = "Confirmed Cases", main = "COVID-19 Confirmed Cases Over Time - Continuos data")
 
-
+###################################################
 # b) 
 
 #Selecting numerical variables
@@ -97,7 +84,7 @@ for (variable in numerical_variables) {
   result.sd <- sd(covid_data[[variable]], na.rm = TRUE)
   print(paste("Standard Deviation of", variable, ":", result.sd))
 }
-
+############################################
 #c)
 numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
 
@@ -113,8 +100,8 @@ z_score_standardized
 robust_scaled <- predict(preProcess(covid_data[, numerical_variables], method = c("center", "scale")), covid_data[, numerical_variables])
 robust_scaled
 
+############################################
 #d) 
-
 numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
 covid_data$Date <- as.Date(covid_data$Date, format = "%Y-%m-%d")  # Adjust the format according to data format
 
@@ -178,9 +165,11 @@ heatmap.2(cor_Matrix,
           cexCol = 0.9,
           cexRow = 0.9)
 
-# e)
+#############################################
+# e) 
 # Task 'e' is answered in the report
 
+#############################################
 # f)
 # Applying dummy encoding to WHO Region categorical variable
 # Benefits will be discussed in the report, here we are just showing the implementation.
@@ -191,6 +180,7 @@ covid_data_encoded <- dummy_cols(covid_data, select_columns = 'WHO.Region', remo
 head(covid_data_encoded)
 head(covid_data)
 
+#############################################
 #g) PCA
 
 numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
@@ -213,4 +203,6 @@ biplot(PCA, main="Principal Component Analyses", choices = components)
 
 # Description of understanding provided in the report.
 
+
+############################################
 # h) provided in the report
