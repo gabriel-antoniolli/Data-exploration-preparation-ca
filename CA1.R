@@ -6,24 +6,40 @@ library(tidyr)
 library(ggplot2)
 library(caret)
 
-# a)
-# Definition of data types are in the report.
+# Data Preprocessing (Cleaning)
 
 # Importing data frame and assigning it to a variable 
-covid_data <- read.csv('full_grouped.csv', header = TRUE)
+full_covid_data <- read.csv('full_grouped.csv', header = TRUE)
 
-#### Checking dataset for missing values
-missing_values <- colSums(is.na(covid_data))
+# Checking dataset for missing values
+missing_values <- colSums(is.na(full_covid_data))
 barplot(missing_values, col = "red", main = "Missing Values")
 
-#### Checking data frame structure
+# Checking data frame structure
 str(covid_data)
 
-#### plot for categorical data
+# Data transformation
+start_date <- as.Date("2020-04-22")
+end_date <- as.Date("2020-07-22")
+
+# Resizing the dataset for it has too many columns
+covid_data <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
+str(sample_data)
+
+
+
+############### TASKS ##################
+
+# a)
+
+# ~Definition of data types are in the report.
+
+# plot for categorical data
 barplot(table(covid_data$WHO.Region),cex.names= 0.7, las=2, col = "lightgreen", main = "WHO Region Distribution - Categorical data plot")
 
 ### plot for numerical data
 par(mfrow = c(3,3))  # Arrange plots in a 3x3 grid 
+
 # loop through each numerical variable
 for (variable in c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")) {
   hist(covid_data[[variable]], col = "orange", main = paste(variable, "Distribution"), xlab = variable, ylab = "Frequency")
