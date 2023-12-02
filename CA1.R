@@ -7,19 +7,9 @@ library(ggplot2)
 library(caret)
 
 # a)
+# Definition of data types are in the report.
 
-## Definition of Data types
-
-### Categorical Variables:
- #### "Country/Region", "WHO Region"
-
-### Discrete Variables:
-  #### "Confirmed", "Deaths" ,"Recovered", "Active", "New cases", "New deaths", "New recovered"
-
-### Continuous Variables:
-  #### "Date"
-
-### Importing data frame and assigning it to a variable 
+# Importing data frame and assigning it to a variable 
 covid_data <- read.csv('full_grouped.csv', header = TRUE)
 
 #### Checking dataset for missing values
@@ -171,3 +161,27 @@ library('fastDummies')
 covid_data_encoded <- dummy_cols(covid_data, select_columns = 'WHO.Region', remove_first_dummy = TRUE)
 head(covid_data_encoded)
 head(covid_data)
+
+#g) PCA
+
+numerical_variables <- c("Confirmed", "Deaths", "Recovered", "Active", "New.cases", "New.deaths", "New.recovered")
+numerical_data <- covid_data[, numerical_variables] #subset the datafrafme with numerical values
+scaled_data <- scale(numerical_data)
+PCA <- princomp(scaled_data)
+
+summary(PCA)
+
+# Loading first 3 components
+unclass(PCA$loadings[,1:3])
+PCA$scores[,1:3]
+
+# Plot showing the importance of each component
+plot(PCA, main="Principal components Importance", col="darkgreen")
+
+# Two principal components
+components <- c(1,2)
+biplot(PCA, main="Principal Component Analyses", choices = components)
+
+# Description of understanding provided in the report.
+
+# h) provided in the report
