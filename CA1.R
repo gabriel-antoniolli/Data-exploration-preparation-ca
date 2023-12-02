@@ -10,6 +10,7 @@ library(caret)
 
 # Importing data frame and assigning it to a variable 
 full_covid_data <- read.csv('full_grouped.csv', header = TRUE)
+str(full_covid_data)
 
 # Checking dataset for missing values
 missing_values <- colSums(is.na(full_covid_data))
@@ -120,7 +121,7 @@ ggplot(covid_data, aes(x = Date, y = Deaths)) +
 # Scatter plot visualization
 ggplot(covid_data, aes(x = New.cases, y = New.deaths)) +
   geom_point(color = "blue") +
-  labs(x = "Recovered Cases", y = "Deaths", title = "Deaths vs Recovered Cases")
+  labs(x = "New Cases", y = "New Deaths", title = "New cases vs New Deaths")
 
 
 # Heatmap visualization
