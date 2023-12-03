@@ -10,14 +10,13 @@ library(caret)
 
 # Importing data frame and assigning it to a variable 
 full_covid_data <- read.csv('full_grouped.csv', header = TRUE)
-str(full_covid_data)
 
 # Checking dataset for missing values
 missing_values <- colSums(is.na(full_covid_data))
 barplot(missing_values, col = "red", main = "Missing Values")
 
 # Checking data frame structure
-str(covid_data)
+str(full_covid_data)
 
 # Data transformation
 start_date <- as.Date("2020-04-22")
@@ -26,8 +25,8 @@ end_date <- as.Date("2020-07-22")
 # Resizing the dataset for it has too many columns
 covid_data_subset <- full_covid_data[full_covid_data$Date >= start_date & full_covid_data$Date <= end_date, ]
 
-#Removing Outliers
-covid_data <- covid_data %>% filter(New.cases >= 0 & New.deaths >= 0)
+#Removing outliers
+covid_data <- covid_data_subset %>% filter(New.cases >= 0 & New.deaths >= 0)
 
 # Check the structure of the cleaned dataset
 str(covid_data)
@@ -184,7 +183,7 @@ heatmap.2(cor_Matrix,
 install.packages('fastDummies')
 library('fastDummies')
 
-covid_data_encoded <- dummy_cols(covid_data, select_columns = 'WHO.Region', remove_first_dummy = TRUE)
+covid_data_encoded <- dummy_cols(covid_data, select_columns = 'WHO.Region')
 head(covid_data_encoded)
 head(covid_data)
 
